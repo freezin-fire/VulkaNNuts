@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 int main() {
-	NNuts::Application sandbox{};
+	NNuts::NNApplication sandbox{};
 
 	try
 	{
