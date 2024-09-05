@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Camera.h"
 #include "Pipeline.h"
 #include "Device.h"
 #include "GameObject.h"
@@ -16,7 +17,10 @@ namespace NNuts {
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-		void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<NNGameObject> &gameObjects);
+		void renderGameObjects(
+			VkCommandBuffer commandBuffer, 
+			std::vector<NNGameObject> &gameObjects, 
+			const NNCamera &camera);
 
 	private:
 		void createPipelineLayout();

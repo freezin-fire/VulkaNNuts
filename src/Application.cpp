@@ -1,5 +1,6 @@
 #include "Application.h"
 
+#include "Camera.h"
 #include "SimpleRenderSystem.h"
 
 #define GLM_FORCE_RADIANS
@@ -24,13 +25,20 @@ namespace NNuts {
 	void NNApplication::run()
 	{
 		SimpleRenderSystem simpleRenderSystem(m_Device, m_Renderer.getSwapChainRenderPass());
+		NNCamera camera{};
+		camera.setViewDirection(glm::vec3{ 0.0f }, glm::vec3{ 0.5f, 0.0f, 1.0f });
+
 		while (!m_Window.shouldClose()) {
 			glfwPollEvents();
+
+			float aspect = m_Renderer.getAspectRatio();
+			//camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+			camera.setPerespectiveProjection(glm::radians(50.0f), aspect, 0.1f, 10.f);
 
 			if (auto commandBuffer = m_Renderer.beginFrame())
 			{
 				m_Renderer.beginSwapChainRenderPass(commandBuffer);
-				simpleRenderSystem.renderGameObjects(commandBuffer, m_GameObjects);
+				simpleRenderSystem.renderGameObjects(commandBuffer, m_GameObjects, camera);
 				m_Renderer.endSwapChainRenderPass(commandBuffer);
 				m_Renderer.endFrame();
 			}
@@ -39,39 +47,79 @@ namespace NNuts {
 
 		vkDeviceWaitIdle(m_Device.device());
 	}
+	
+	std::unique_ptr<NNModel> createCubeModel(NNDevice& device, glm::vec3 offset) {
+		std::vector<NNModel::Vertex> vertices{
+
+			// left face (white)
+			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+			{{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
+			{{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
+			{{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+
+			// right face (yellow)
+			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+			{{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
+			{{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+
+			// top face (orange, remember y axis points down)
+			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+			{{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+			{{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+			{{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+
+			// bottom face (red)
+			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+			{{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
+			{{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+			{{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+
+			// nose face (blue)
+			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+			{{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+			{{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+			{{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+
+			// tail face (green)
+			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+			{{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+			{{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+			{{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+
+		};
+		for (auto& v : vertices) {
+			v.position += offset;
+		}
+		return std::make_unique<NNModel>(device, vertices);
+	}
 
 	void NNApplication::loadGameObjects()
 	{
-		// triangle test vertices
-		std::vector<NNModel::Vertex> vertices{
-			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
-			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
-			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
-		};
+		std::shared_ptr<NNModel> cubeModel = createCubeModel(m_Device, { 0.0f, 0.0f, 0.0f });
 
-		auto model = std::make_shared<NNModel>(m_Device, vertices);
-
-		std::vector<glm::vec3> colors{
-			{1.0f, 0.7f, 0.73f},
-			{1.0f, 0.87f, 0.73f},
-			{1.0f, 1.0f, 0.73f},
-			{0.73f, 1.0f, 0.8f},
-			{0.73f, 0.88f, 1.0f}
-		};
-
-		for (auto& color : colors) {
-			color = glm::pow(color, glm::vec3{ 2.2f });
-		}
-
-		for (int i = 0; i < 40; i++)
-		{
-			auto triangle = NNGameObject::createGameObject();
-			triangle.model = model;
-			triangle.transform2d.scale = glm::vec2(0.5f) + i * 0.025f;
-			triangle.transform2d.rotation = i * glm::pi<float>() * 0.025f;
-			triangle.color = colors[i % colors.size()];
-			m_GameObjects.push_back(std::move(triangle));
-		}
-
+		auto cube1 = NNGameObject::createGameObject();
+		cube1.model = cubeModel;
+		cube1.transform.translation = { 0.0f, 0.0f, 2.5f };
+		cube1.transform.scale = { 0.5f, 0.5f, 0.5f };
+		m_GameObjects.push_back(std::move(cube1));
+		
+		auto cube2 = NNGameObject::createGameObject();
+		cube2.model = cubeModel;
+		cube2.transform.translation = { 0.5f, 0.0f, 1.5f };
+		cube2.transform.scale = { 0.2f, 0.2f, 0.2f };
+		m_GameObjects.push_back(std::move(cube2));
 	}
 }

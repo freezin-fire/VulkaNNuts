@@ -18,6 +18,7 @@ namespace NNuts {
 		NNRenderer& operator=(const NNRenderer&) = delete;
 
 		VkRenderPass getSwapChainRenderPass() const { return m_SwapChain->getRenderPass(); }
+		float getAspectRatio() const { return m_SwapChain->extentAspectRatio(); }
 		bool isFrameInProgress() const { return isFrameStarted; }
 
 		VkCommandBuffer getCurrentCommandBuffer() const {
