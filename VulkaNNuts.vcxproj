@@ -173,6 +173,7 @@
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\GameObject.h" />
+    <ClCompile Include="src\KeyboardMovementController.cpp" />
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\Device.cpp" />
     <ClCompile Include="src\Pipeline.cpp" />
@@ -185,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\KeyboardMovementController.h" />
     <ClInclude Include="src\Model.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Device.h" />

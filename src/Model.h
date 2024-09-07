@@ -20,7 +20,12 @@ namespace NNuts {
 
 		};
 
-		NNModel(NNDevice &device, const std::vector<Vertex> &vertices);
+		struct Builder {
+			std::vector<Vertex> vertices{};
+			std::vector<uint32_t> indices{};
+		};
+
+		NNModel(NNDevice &device, const Builder &builder);
 		~NNModel();
 
 		NNModel(const NNModel&) = delete;
@@ -31,9 +36,17 @@ namespace NNuts {
 
 	private:
 		void createVertexBuffers(const std::vector<Vertex>& vertices);
+		void createIndexBuffer(const std::vector<uint32_t>& indices);
+
 		NNDevice& m_Device;
+		
 		VkBuffer m_VertexBuffer;
 		VkDeviceMemory m_VertexBufferMemory;
 		uint32_t m_VertexCount;
+
+		bool m_HasIndexBuffered = false;
+		VkBuffer m_IndexBuffer;
+		VkDeviceMemory m_IndexBufferMemory;
+		uint32_t m_IndexCount;
 	};
 }

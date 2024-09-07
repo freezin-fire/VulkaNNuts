@@ -20,6 +20,7 @@ namespace NNuts {
 		}
 		bool wasWindowResized() { return m_FramebufferResized; };
 		void resetWindowResizedFlag() { m_FramebufferResized = false; };
+		GLFWwindow* getGLFWwindow() { return m_Window; };
 
 		void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 	private:
