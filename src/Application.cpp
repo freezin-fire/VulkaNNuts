@@ -114,18 +114,13 @@ namespace NNuts {
 
 	void NNApplication::loadGameObjects()
 	{
-		std::shared_ptr<NNModel> cubeModel = createCubeModel(m_Device, { 0.0f, 0.0f, 0.0f });
+		std::shared_ptr<NNModel> model = NNModel::createModelFromFile(m_Device, "res/Models/flat_vase.obj");
 
-		auto cube1 = NNGameObject::createGameObject();
-		cube1.model = cubeModel;
-		cube1.transform.translation = { 0.0f, 0.0f, 2.5f };
-		cube1.transform.scale = { 0.5f, 0.5f, 0.5f };
-		m_GameObjects.push_back(std::move(cube1));
-
-		auto cube2 = NNGameObject::createGameObject();
-		cube2.model = cubeModel;
-		cube2.transform.translation = { 1.0f, 0.5f, 2.5f };
-		cube2.transform.scale = { 0.7f, 0.7f, 0.4f };
-		m_GameObjects.push_back(std::move(cube2));
+		auto gameObj = NNGameObject::createGameObject();
+		gameObj.model = model;
+		gameObj.transform.translation = { 0.0f, 0.5f, 2.5f };
+		gameObj.transform.scale = { 3.0f, 1.5f, 2.0f };
+		//gameObj.transform.scale = glm::vec3{3.0f};
+		m_GameObjects.push_back(std::move(gameObj));
 	}
 }

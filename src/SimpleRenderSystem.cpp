@@ -12,7 +12,7 @@
 namespace NNuts {
 	struct SimplePushConstantData {
 		glm::mat4 transform{ 1.0f };
-		alignas(16) glm::vec3 color;
+		glm::mat4 normalMatrix{ 1.0f };
 	};
 
 	SimpleRenderSystem::SimpleRenderSystem(NNDevice &device, VkRenderPass renderPass):
@@ -76,8 +76,9 @@ namespace NNuts {
 			obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.005f, glm::two_pi<float>());*/
 
 			SimplePushConstantData push{};
-			push.color = obj.color;
-			push.transform = projectionView * obj.transform.mat4();
+			auto modelMatrix = obj.transform.mat4();
+			push.transform = projectionView * modelMatrix;
+			push.normalMatrix = obj.transform.normalMatrix();
 
 			vkCmdPushConstants(
 				commandBuffer,
