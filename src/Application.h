@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Window.h"
+#include "Descriptor.h"
 #include "Device.h"
 #include "GameObject.h"
 #include "Renderer.h"
+#include "Window.h"
 
 #include <memory>
 #include <vector>
@@ -29,6 +30,7 @@ namespace NNuts {
 		NNDevice m_Device{ m_Window };
 		NNRenderer	m_Renderer{ m_Window, m_Device };
 
+		std::unique_ptr<NNDescriptorPool> m_GlobalPool;
 		std::vector<NNGameObject> m_GameObjects;
 	};
 }

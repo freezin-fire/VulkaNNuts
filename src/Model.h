@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Buffer.h"
 #include "Device.h"
 
 #define GLM_FORCE_RADIANS
@@ -50,13 +51,11 @@ namespace NNuts {
 
 		NNDevice& m_Device;
 		
-		VkBuffer m_VertexBuffer;
-		VkDeviceMemory m_VertexBufferMemory;
+		std::unique_ptr<NNBuffer> m_VertexBuffer;
 		uint32_t m_VertexCount;
 
 		bool m_HasIndexBuffered = false;
-		VkBuffer m_IndexBuffer;
-		VkDeviceMemory m_IndexBufferMemory;
+		std::unique_ptr<NNBuffer> m_IndexBuffer;
 		uint32_t m_IndexCount;
 	};
 }

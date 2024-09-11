@@ -4,6 +4,7 @@
 #include "Pipeline.h"
 #include "Device.h"
 #include "GameObject.h"
+#include "FrameInfo.h"
 
 #include <memory>
 #include <vector>
@@ -11,19 +12,18 @@
 namespace NNuts {
 	class SimpleRenderSystem {
 	public:
-		SimpleRenderSystem(NNDevice &device, VkRenderPass renderPass);
+		SimpleRenderSystem(NNDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 		~SimpleRenderSystem();
 
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
 		void renderGameObjects(
-			VkCommandBuffer commandBuffer, 
-			std::vector<NNGameObject> &gameObjects, 
-			const NNCamera &camera);
+			FrameInfo &frameInfo, 
+			std::vector<NNGameObject> &gameObjects);
 
 	private:
-		void createPipelineLayout();
+		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 		void createPipeline(VkRenderPass renderPass);
 
 		NNDevice &m_Device;
