@@ -5,8 +5,10 @@ VulkanNuts is an open-source, multi-platform 3D game engine software written in 
 ## Features
 
 -   **Cross-Platform** (currently Windows-only; other platforms coming soon)
--   **Vulkan API** for efficient low-level graphics rendering
--   **C++ Backend** for performance and flexibility
+-   **Vulkan Renderer** for efficient and cross-platform graphics rendering
+-   **Lighting Support**: Simple point and directional lights
+-   **Alpha Blending**: Basic level alpha blending is implemented
+-   **.OBJ Model Loading**: Supports loading `.obj` files exported from any 3D modeling software (test files available in the `res\models` folder)
 
 ## Dependencies
 
@@ -34,6 +36,11 @@ All necessary dependencies are included in the `vendor` folder.
     
 2.  Open the provided Visual Studio project file (`.vcproj`) in Visual Studio 2022.
 3.  Build the solution within Visual Studio.
+
+### Controls:
+-   `W`, `A`, `S`, `D`: Strafe movement
+-   `E`, `Q`: Move up/down
+-   Arrow Keys: Camera movement
 
 ## Platform Support
 
